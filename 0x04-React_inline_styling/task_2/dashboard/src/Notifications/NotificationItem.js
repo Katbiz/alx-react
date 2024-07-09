@@ -1,49 +1,31 @@
+import React, { PureComponent }  from 'react'
+import PropTypes from 'prop-types'
 
-import React from 'react';
-import { StyleSheet, css } from "aphrodite";
-import PropTypes from 'prop-types';
-
-
-
-class NotificationItem extends React.PureComponent {
-
-  render() {
-    const { type, html, value, id, markAsRead} = this.props
-    let typeStyle = css(type === "urgent" ? styles.urgent : styles.default);
-  
-  if (type && value) {
-      return <li className={typeStyle} data-priority={type} onClick={() => markAsRead(id)}>{value}</li>;
+class NotificationItem extends PureComponent {
+  render () {
+    return (
+      this.props.value ? <li data-notification-type={this.props.type} key={this.props.id} onClick={() => this.props.markAsRead(this.props.id)}>
+              {this.props.value}
+              </li> : 
+             <li 
+            data-notification-type={this.props.type} 
+            dangerouslySetInnerHTML={this.props.html}
+            key={this.props.id}
+            onClick={() => this.props.markAsRead(this.props.id)}>
+            </li>
+    )
   }
-  return <li className={typeStyle} data-priority={type} dangerouslySetInnerHTML={html} onClick={() => markAsRead(id)}></li>;
-}
 }
 
+NotificationItem.defaultProps = {
+  type: "default"
+}
 
 NotificationItem.propTypes = {
+  html: PropTypes.shape({__html: PropTypes.string}),
   type: PropTypes.string.isRequired,
-  html: PropTypes.shape({
-    __html: PropTypes.string
-  }),
-  value: PropTypes.string,
-  id: PropTypes.number,
+  value: PropTypes.string
 }
-NotificationItem.defaultProps = {
-  type: 'default',
-  html: {},
-  value: '',
-  id: 0,
-};
 
 
-const styles = StyleSheet.create({
-  default: {
-    color: "blue",
-  },
-
-  urgent: {
-    color: "red",
-  },
-});
-
-
-export default NotificationItem;
+export default NotificationItem

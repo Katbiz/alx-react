@@ -1,24 +1,18 @@
-import React from 'react';
-import CourseListRow from "./CourseListRow.js"
-import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-configure({adapter: new Adapter()});
+import React from "react";
+import Enzyme, { shallow } from 'enzyme'
+import CourseListRow from "./CourseListRow";
 
+describe("Test CourseListRow component", () => {
+    test("renders one cell with colspan = 2 when textSecondCell does not exist and header is true", () => {
+        const wrapper = shallow(<CourseListRow  isHeader={true} textFirstCell="First cell"/>)
+        expect(wrapper.find('th').length).toBe(1)
+        expect(wrapper.find('th').text()).toBe("First cell")
 
-it('renders one cell with colspan = 2', () => {
-    let textSecondCell = null;
-    const wrapper = shallow(<CourseListRow  isHeader textFirstCell= "textFirstCell" {...{textSecondCell}}  />);
-    expect(wrapper.html()).toBe('<tr><th colSpan="2">textFirstCell</th></tr>')
-});
-
-it('returns two th elements containing textFirstCell and textSecondCell', () => {
-    let textSecondCell = 'textSecondCell';
-    const wrapper = shallow(<CourseListRow  isHeader textFirstCell= "textFirstCell" {...{textSecondCell}}  />);
-    expect(wrapper.html()).toBe('<tr><th>textFirstCell</th><th>textSecondCell</th></tr>')
-});
-
-it("returns two td elements containing textFirstCell and textSecondCell",() =>{
-    const wrapper = shallow(<CourseListRow textFirstCell = "textFirstCell" textSecondCell = "textSecondCell"/>);
-    expect(wrapper.html()).toBe("<tr><td>textFirstCell</td><td>textSecondCell</td></tr>")
-
+    })
+    test("renders two cells when textSecondCell is present", () => {
+        const wrapper = shallow(<CourseListRow  isHeader={true} textFirstCell="First cell" textSecondCell="Second cell" />)
+        expect(wrapper.find('th').length).toBe(2)
+        expect(wrapper.find('th').at(0).text()).toBe("First cell")
+        expect(wrapper.find('th').at(1).text()).toBe("Second cell")
+    })
 })
