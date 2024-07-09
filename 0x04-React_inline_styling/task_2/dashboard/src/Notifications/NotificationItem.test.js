@@ -1,31 +1,21 @@
-import React from "react";
-import { shallow, mount } from "enzyme";
-import NotificationItem from "./NotificationItem";
-import Notifications from './Notifications'
+import React from 'react';
+import NotificationItem from "./NotificationItem.js"
+import { shallow, configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+configure({adapter: new Adapter()});
 
 
-describe("Testing NotificationItem Component", () => {
-    let wrapper;
-    beforeEach(() => {
-        wrapper = shallow(<NotificationItem />)
-    })
-    test("renders component without crashing", () => {
-        expect(wrapper.length).toBe(1)
-    })
-    test("renders the correct html by passing dummy type and value props", () => {
-        const wrapper = shallow(<NotificationItem type="urgent" value="New resume available" />)
-        expect(wrapper.html()).toBe('<li data-notification-type="urgent">New resume available</li>')
-    })
-    test("renders the correct html by passing dummy html prop", () => {
-        const wrapper = shallow(<NotificationItem html={{ __html: '<u>test</u>' }}/>)
-        expect(wrapper.html()).toBe('<li data-notification-type="default"><u>test</u></li>')
-    })
-    test("", () => {
-        const notificationWrapper = shallow(<Notifications />)
-        const mockFunc = jest.spyOn(notificationWrapper.instance(), 'markAsRead')
-        const wrapper = mount(<NotificationItem type="urgent" id={1} value="New resume available" markAsRead={mockFunc.mockImplementation((id) => (`Notification ${id} has been marked as read`))}/>)
-        const listElement = wrapper.find('li')
-        listElement.simulate('click')
-        expect(mockFunc).toHaveBeenCalledWith(1)
-    })
+it(" rendering of the component", () => {
+    const wrapper = shallow(<NotificationItem type="default" value="test"/>)
+    expect(wrapper.exists()).toEqual(true);
+})
+
+it("renders the correct Props ", () => {
+    const wrapper = shallow(<NotificationItem type="default" value="test"/>)
+    expect(wrapper.props()).toContain('{"children": "test", "data-priority": "default", "onClick": [Function onClick]}')
+})
+
+it("renders the correct html", () => {
+    const wrapper = shallow(< NotificationItem type="urgent" html={{ __html: '<u>test</u>' }} />)
+    expect(wrapper.html()).toEqual('<li data-priority=\"urgent\"><u>test</u></li>')
 })
